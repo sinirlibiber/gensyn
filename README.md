@@ -1,83 +1,41 @@
 ![image](https://github.com/user-attachments/assets/8ad5a694-e287-4d45-ba57-203f58a19714)
 
-# Run RL Swarm (Testnet) Node
-RL Swarm is a fully open-source framework developed by GensynAI for building reinforcement learning (RL) training swarms over the internet. This guide walks you through setting up an RL Swarm node and a web UI dashboard to monitor swarm activity.
+# Gensyn AI RL Swarm Installation Guide
 
-## Hardware Requirements
-Currently in the new recent update, Gensyn testnet is running and training the [reasoning-gym](https://github.com/open-thought/reasoning-gym/tree/main) swarm datasets on the Testnet. This swarm is supporting the current list of default models:
-* Gensyn/Qwen2.5-0.5B-Instruct
-* Qwen/Qwen3-0.6B
-* nvidia/AceInstruct-1.5B
-* dnotitia/Smoothie-Qwen3-1.7B
-* Gensyn/Qwen2.5-1.5B-Instruct
+This guide provides step-by-step instructions to install **Gensyn AI's open-source RL Swarm** framework and connect to the **Gensyn Testnet**. RL Swarm enables collaborative reinforcement learning (RL) training swarms over the internet — from consumer laptops to cloud GPUs — with on-chain identity and a chance to earn rewards for your contributions.
 
-Your hardware requirements will vary depending on model you choose. Users with less powerful hardware should select a smaller model (e.g. `Qwen2.5-0.5B` or `Qwen3-0.6B`). Users with more powerful hardware can select a larger models.
+**Warning:** This guide is optimized for **Ubuntu/Debian-based systems** (VPS, RunPod GPU, or WSL). You'll need to log in to your Hugging Face account during setup. Hardware requirements vary by model size: 8GB VRAM for small models (0.5B), 24GB+ recommended for large ones (7B+).
 
-### CPU & GPU support
-* `CPU-only`: arm64 or x86 CPU with minimum `32gb` ram (note that if you run other applications during training it might crash training).
+## Prerequisites
 
-OR
+Before starting, ensure you have:
 
-* `GPU`: 
-  * RTX 3090
-  * RTX 4090
-  * RTX 5090
-  * A100
-  * H100
-  * `≥24GB vRAM` GPU is recommended, but Gensyn now supports `<24GB vRAM` GPUs too.
-  * `≥12.4` CUDA Driver.
+- **OS:** Ubuntu 20.04+ or Debian-based (WSL2 on Windows supported).
+- **Hardware:**
+  - GPU: NVIDIA RTX 30/40 series (minimum 8GB VRAM).
+  - CPU-only fallback: 8+ cores, 16GB+ RAM.
+- **Accounts:**
+  - [Hugging Face](https://huggingface.co/) account (required for model downloads).
+  - [Gensyn Dashboard](https://dashboard.gensyn.ai/) account (to get your Node ID & EOA address).
+  - Optional: RunPod, Vast.ai, or AWS account (for cloud GPUs).
+- **Tools:** Git, curl, wget, screen (will be installed during setup).
 
+## Quick Start (Auto-Install Script)
+
+Use the official auto-install script for the fastest setup:
+
+1. SSH into your VPS/GPU server.
+2. Create a screen session:
+   ```bash
+   sudo apt update && sudo apt install -y screen
+   screen -S gensynrlswarm
 #
 
 * This guide is going through the easiet default way to participate on testnet, you can checkout [Official Repo](https://github.com/gensyn-ai/rl-swarm/tree/main) for more details.
 
 #
 
-## 📋 Quick Navigation
 
-### 🚀 Getting Started
-- **[Environment Setup](#enviorements)** - Choose your setup method (Windows, Cloud GPU, VPS)
-- **[Install Dependencies](#1-install-dependencies)** - System packages, Python, Node.js, Yarn
-- **[HuggingFace Setup](#2-get-huggingface-access-token)** - Create account and access token
-- **[Clone Repository](#3-clone-the-repository)** - Download RL Swarm code
-
-### 🏃‍♂️ Running Your Node
-- **[Run the Swarm](#4-run-the-swarm)** - CLI and Docker methods
-- **[Login Process](#5-login)** - Web interface setup and authentication
-- **[Join Judge](#5-join-judge)** - AI Prediction Market participation
-- **[Node Name](#node-name)** - Find your unique animal name
-- **[Screen Commands](#screen-commands)** - Manage background sessions
-
-### 🔧 Advanced Setup
-- **[Multiple Nodes](#run-multiple-nodes)** - Run multiple instances
-- **[Backup & Recovery](#backup)** - Protect your swarm.pem file
-- **[Node Health](#node-health)** - Monitor performance and rewards
-- **[Gswarm Bot](#gswarm-roletelegram-bot)** - Telegram monitoring setup
-
-### 🛠️ Maintenance
-- **[Update Node](#update-node)** - Keep your node up to date
-- **[Troubleshooting](#troubleshooting)** - Common issues and solutions
-
-### 🌐 Cloud Providers
-- **[Vast.ai Setup](#1--rent-vastai-gpus)** - GPU rental with SSH
-- **[QuickPod Setup](#2--rent-quickpod)** - No SSH key required
-- **[Hyperbolic Setup](#3--rent-hyperbolic-gpus)** - Alternative GPU provider
-- **[VPS Setup](#method-3-vps-servers)** - CPU-only server option
-
-### 📊 Monitoring & Rewards
-- **[Official Dashboard](#official-dashboard)** - Gensyn web interface
-- **[Contract Explorer](#contract)** - Blockchain transaction history
-- **[Telegram Bot](#gswarm-roletelegram-bot)** - Real-time notifications
-
----
-
-## Enviorements
-
-## Method 1 - Windows Users (Home PC):
-If you are a windows user, you may need to install `Ubuntu` on your windows.
-* Install Ubuntu on Windows: [Guide](https://github.com/0xmoei/Install-Linux-on-Windows)
-* After you installed `Ubuntu` on Windows, Verify you already have `NVIDIA Driver` & `CUDA Toolkit` ready:
-```console
 # Install NVIDIA Toolkit
 sudo apt-get update
 sudo apt-get install -y nvidia-cuda-toolkit
